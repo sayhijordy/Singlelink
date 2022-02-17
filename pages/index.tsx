@@ -50,29 +50,84 @@ const Home = ({ links }: { links: LinkType[]}) => {
       <meta property="twitter:image" content={process.env.META_IMG} />
     </Head>
     <div className='flex flex-col items-center justify-center w-full max-w-md mx-auto py-16 px-4'>
-      {[...links].map(link => {
-        if(link?.type === 'text')
+	{[...links].sort((a,b) => {
+        if ((a?.position ?? 0) > (b?.position ?? 0)) return 1
+        if ((a?.position ?? 0) < (b?.position ?? 0)) return -1
+        return 0
+      }).map(link => {
+
+		  if(link?.type === 'avatar')
+          return (
+			<div className="text-center flex flex-col items-center justify-center rounded-full mb-4" key={link?.id}>
+				<img alt="User" src={link.content ?? '#'} className="avatar-pic flex items-center justify-center w-24 h-24 rounded-full" />
+			</div>
+		  )
+		  if(link?.type === 'text')
           return (<div className='text-center flex flex-col items-center justify-center mb-4' key={link?.id}>
             <h1 className="text-3xl mb-4 font-semibold">{link?.label}</h1>
             <h2 className='text-xl text-gray-600'>{link?.content}</h2>
           </div>)
-        if(link?.type === 'vanilla')
-          return (<a href={`/api/link/${link?.id}` ?? '#'} className='shadow hover:scale-105 duration-300 ease-in-out flex flex-col w-full text-center px-3 py-5 mb-3 bg-white text-black text-lg font-medium rounded-lg' key={link?.id}>{link?.label}</a>)
-        if(link?.type === 'avatar')
-          return (<div className='flex items-center justify-center overflow-hidden w-24 h-24 rounded-full mb-6' key={link?.id}>
-            <img alt="User" src={link.content ?? '#'} width='100%' height='auto' />
-          </div>)
+		  })}
+      {[...links].sort((a,b) => {
+        if ((a?.position ?? 0) > (b?.position ?? 0)) return 1
+        if ((a?.position ?? 0) < (b?.position ?? 0)) return -1
+        return 0
+      }).map(link => {
+
+        if(link?.type === 'vanilla' && link?.label === 'Instagram')
+          return (
+		  <a href={link.content ?? '#'} className='shadow hover:scale-105 duration-300 ease-in-out flex flex-col w-full text-center px-3 py-5 mb-3 bg-white text-black text-lg font-medium rounded-lg link-name' key={link?.id}>
+			  <ion-icon src="/instagram.svg"></ion-icon>
+			  <span className='social-label'>{link?.label}</span>
+			  </a>)
+        if(link?.type === 'vanilla' && link?.label === 'Spotify')
+		return (
+		<a href={link.content ?? '#'} className='shadow hover:scale-105 duration-300 ease-in-out flex flex-col w-full text-center px-3 py-5 mb-3 bg-white text-black text-lg font-medium rounded-lg link-name' key={link?.id}>
+			<ion-icon src="/spotify.svg"></ion-icon>
+			<span className='social-label'>{link?.label}</span>
+			</a>)
+		if(link?.type === 'vanilla' && link?.label === 'Soundcloud')
+		return (
+		<a href={link.content ?? '#'} className='shadow hover:scale-105 duration-300 ease-in-out flex flex-col w-full text-center px-3 py-5 mb-3 bg-white text-black text-lg font-medium rounded-lg link-name' key={link?.id}>
+			<ion-icon name="logo-soundcloud"></ion-icon>
+			<span className='social-label'>{link?.label}</span>
+			</a>)
+		if(link?.type === 'vanilla' && link?.label === 'Music Videos')
+		return (
+		<a href={link.content ?? '#'} className='shadow hover:scale-105 duration-300 ease-in-out flex flex-col w-full text-center px-3 py-5 mb-3 bg-white text-black text-lg font-medium rounded-lg link-name' key={link?.id}>
+			<ion-icon name="logo-youtube"></ion-icon>
+			<span className='social-label'>{link?.label}</span>
+			</a>)
+		if(link?.type === 'vanilla' && link?.label === 'TikTok')
+		return (
+		<a href={link.content ?? '#'} className='shadow hover:scale-105 duration-300 ease-in-out flex flex-col w-full text-center px-3 py-5 mb-3 bg-white text-black text-lg font-medium rounded-lg link-name' key={link?.id}>
+			<ion-icon name="logo-tiktok"></ion-icon>
+			<span className='social-label'>{link?.label}</span>
+			</a>)
+		if(link?.type === 'vanilla' && link?.label === 'Apple Music')
+		return (
+		<a href={link.content ?? '#'} className='shadow hover:scale-105 duration-300 ease-in-out flex flex-col w-full text-center px-3 py-5 mb-3 bg-white text-black text-lg font-medium rounded-lg link-name' key={link?.id}>
+			<ion-icon name="logo-apple"></ion-icon>
+			<span className='social-label'>{link?.label}</span>
+			</a>)
+		if(link?.type === 'vanilla')
+		return (<a href={link.content ?? '#'} className='shadow hover:scale-105 duration-300 ease-in-out flex flex-col w-full text-center px-3 py-5 mb-3 bg-white text-black text-lg font-medium rounded-lg' key={link?.id}>
+			{link?.label}
+			</a>)
         if(link?.type === 'youtube')
-          return (<div key={link.id} className='embed-container rounded-lg'>
-            <iframe src={link.content ?? '#'} frameBorder='0' allowFullScreen></iframe>
+          return (
+		  <div key={link.id} className='embed-container rounded-lg'>
+            <iframe width="420" height="315" src={link.content ?? '#'} title="YouTube video player" frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen></iframe>
           </div>)
         if(link?.type === 'image')
           return (<img key={link.id} src={link.content ?? '#'} alt={link.label ?? ''} style={{width: '100%', height: 'auto'}} />)
         if(link?.type === 'html')
           return (<div key={link.id}>{parse(link.content)}</div>)
       })}
-      {process.env.BRANDING && <div className='text-gray-600 mt-auto mt-10 text-center'>Build your free micro-site in seconds with <a href="https://singlelink.co" className='font-medium text-indigo-600 hover:underline hover:text-indigo-700'>Singlelink</a></div>}
+      {/* {process.env.BRANDING && <div className='text-gray-600 mt-auto mt-10 text-center'>Rilind Valentine</div>} */}
     </div>
+	<script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+	<script noModule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
     </>
   )
 }
